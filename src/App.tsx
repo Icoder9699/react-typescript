@@ -1,67 +1,67 @@
 import axios from 'axios';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
-import { Card, CardVariant } from './components/Card';
-import List from './components/List';
-import UserItem from './components/UserItem';
+import AddTodo from './components/AddTodo';
+import { List } from './components/List';
 import TodoItem from './components/TodoItem';
-import { UserList } from './components/UserList';
-import { ITodo, IUser } from './types/types';
+import TodoList from './components/TodoList';
+import { ITodo } from './types/types';
 
 
 const App = () => {
-  const [users, setUsers] = React.useState<IUser[]>([
-    {id: 1, name: 'Azizbek', username: 'Azizbek', email: 'azizbek@mail.com', address:{street: 'Xirmontepa', city: "Tashkent"}},
-    {id: 2, name: 'Lazizbek', username: 'Lazizbek', email: 'Lazizbek@mail.com', address:{street: 'Xirmontepa', city: "Tashkent"}}
+  const [todos, setTodos] = useState<ITodo[]>([
+    {id: 1, title: 'React-typescript', completed: false},
+    {id: 2, title: 'Vue-typescript', completed: true},
+    {id: 3, title: 'typescript', completed: false}
   ])
-  const [todos, setTodos] = React.useState<ITodo[]>([])
 
-  const fetchUsers = () => {
-    fetch('https://jsonplaceholder.typicode.com/users?_limit=10')
-      .then(resp => resp.json())
-      .then(users => setUsers(users))
+  const addTodoHandler = (title: string): void => {
+    const todo = {
+      id: Date.now(),
+      title,
+      completed: false
+    }
+
+    setTodos([...todos, todo])
+
+  }
+
+  const removeTodoHandler = (id: number): void => {
+    const newTodos = todos.filter(todo => todo.id !== id)
+    setTodos(newTodos)
+  }
+
+  const checkTodoHandler = (id: number): void => {
+    const updatedTodos = todos.map(todo => {
+      if(todo.id === id){
+        todo.completed = !todo.completed
+      }
+      return todo
+    })
+
+    setTodos(updatedTodos)
   }
 
   const fetchTodos = async () => {
-    const {data} = await axios.get<ITodo[]>('https://jsonplaceholder.typicode.com/todos?_limit=10')
-    console.log(data)
+    const {data} = await axios.get<ITodo[]>("https://jsonplaceholder.typicode.com/todos?_limit=10")
     setTodos(data)
-  }  
+  }
 
-  React.useEffect(() => {
-    fetchUsers()
+  useEffect(() => {
     fetchTodos()
   }, [])
 
   return (
     <div className="app">
-      <Card 
-        width="200px"
-        height="200px" 
-        variant={CardVariant.primary}
-        onClick={(num) => console.log(num)}
-      >
-        Hello firts Card!
-      </Card>
-
-      <hr/>
-
-      {/* <UserList 
-        users={users}
-      /> */}
-
-      {/* universal LIST */}
-      {/* <List 
-        items={users}
-        renderItems={(user: IUser) => <UserItem  user={user} key={user.id}/>}
-      /> */}
-
-      <List
-        items={todos}
-        renderItems={(todo: ITodo) => <TodoItem todo={todo} key={todo.id} />}
+      <h1>Typescript Todo</h1>
+      <AddTodo
+        addTodo={addTodoHandler}
       />
-      
-
+      <TodoList
+        todos={todos}
+        removeTodo={removeTodoHandler}
+        checkTodo={checkTodoHandler}
+      /> 
     </div>
   );
 }

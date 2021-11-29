@@ -1,17 +1,14 @@
-import React from 'react'
+import React, { FC } from 'react'
 
-// generics
-interface ListProps<T>{
+export interface ListProps<T> {
     items: T[];
-    renderItems: (item: T) => React.ReactNode;
+    renderedItem: (item: T) => React.ReactNode
 }
 
-export default function List<T>(props: ListProps<T>){
-    return(
+export function List<T>(props: ListProps<T>){
+    return (
         <div>
-            {
-                props.items.map(props.renderItems)
-            }
+            {props.items.map(props.renderedItem)}
         </div>
     )
 }
