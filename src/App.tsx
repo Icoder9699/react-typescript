@@ -1,12 +1,24 @@
 import React from 'react';
+import { Route, Switch } from 'react-router-dom';
 import MainLayout from './layouts/MainLayout';
-import HomePage from './pages/HomePage';
+import {routes} from './routes/routes';
 
 function App() {
 
   return (
     <MainLayout>
-      <HomePage/>
+      <Switch>
+        {
+          routes.map(route => {
+            return <Route 
+              key={route.path}
+              exact={route.exact}
+              path={route.path}
+              component={route.component}
+            />
+          })
+        }
+      </Switch>
     </MainLayout>
   );
 }

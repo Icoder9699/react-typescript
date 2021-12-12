@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import TodoAdd from '../components/TodoAdd';
 import TodoList from '../components/TodoList';
 import ITodo from '../interfaces/TodoInterface';
@@ -34,6 +35,7 @@ function HomePage() {
   return (
     <div className="container">
       <h2 className="center">Hello React-Typescript!</h2>
+      <Link to="/about">About Page</Link> 
         <TodoAdd 
           addTodo={addTodoHandler}
           allTodos={todos.length}
